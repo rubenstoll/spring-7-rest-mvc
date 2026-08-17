@@ -1,3 +1,9 @@
 spring:
   application:
     name: spring-7-rest-mvc
+
+
+logging:
+  level:
+#    root: INFO  # Set the general logging level for the application
+    guru.springframework: DEBUG

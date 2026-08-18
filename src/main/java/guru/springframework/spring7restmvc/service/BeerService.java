@@ -1,9 +1,13 @@
-package guru.springframework.spring7restmvc;
+package guru.springframework.spring7restmvc.service;
 
+import java.util.List;
 import java.util.UUID;
 
 import guru.springframework.spring7restmvc.model.Beer;
 
 public interface BeerService {
+
+    List<Beer> listBeers();
+
     Beer getBeerById(UUID id);
 }

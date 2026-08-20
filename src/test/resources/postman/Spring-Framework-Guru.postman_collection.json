@@ -1,7 +1,7 @@
 {
   "info": {
-    "_postman_id": "8698826f-6c59-4184-bd96-d380b2b317fd",
-    "name": "Spring Framework Guru",
+    "_postman_id": "56bb207a-749c-49e0-aaae-05559794b97c",
+    "name": "Spring-Framework-Guru",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "10142290"
   },
@@ -15,8 +15,8 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "https://localhost:8080/api/v1/beer",
-          "protocol": "https",
+          "raw": "http://localhost:8080/api/v1/beer",
+          "protocol": "http",
           "host": [
             "localhost"
           ],
@@ -31,7 +31,31 @@
       "response": []
     },
     {
-      "name": "get beers v2",
+      "name": "getCustomer",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/v1/customer",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "customer"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get Beer by ID",
       "protocolProfileBehavior": {
         "disabledSystemHeaders": {}
       },
@@ -39,8 +63,67 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "https://localhost:8080/api/v1/beer",
-          "protocol": "https",
+          "raw": "http://localhost:8080/api/v1/beer/8a232a73-3cf9-4cd2-96bd-fe936e7100c9",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "beer",
+            "8a232a73-3cf9-4cd2-96bd-fe936e7100c9"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get Customer by ID",
+      "protocolProfileBehavior": {
+        "disabledSystemHeaders": {}
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/v1/customer/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "customer",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "saveBeer",
+      "protocolProfileBehavior": {
+        "disabledSystemHeaders": {}
+      },
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "    {\n        \"beerName\": \"Modelo Negra\",\n        \"beerStyle\": \"IPA\",\n        \"price\": 11.00,\n        \"quantityOnHand\": 300,\n        \"upc\": \"12345677888\"\n    }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/v1/beer",
+          "protocol": "http",
           "host": [
             "localhost"
           ],

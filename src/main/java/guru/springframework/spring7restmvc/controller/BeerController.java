@@ -7,6 +7,7 @@ import guru.springframework.spring7restmvc.model.Beer;
 import guru.springframework.spring7restmvc.service.BeerService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,7 +31,11 @@ public class BeerController {
     public ResponseEntity handlePost(@RequestBody Beer beer) {
 //    public ResponseEntity handlePost(Beer beer) {
         Beer savedBeer = beerService.saveNewBeer(beer);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.LOCATION, "/api/v1/beer/" + savedBeer.getId());
+
+        return new ResponseEntity<>(headers, HttpStatus.CREATED);
 
     }
 

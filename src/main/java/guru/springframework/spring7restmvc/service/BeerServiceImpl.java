@@ -80,9 +80,7 @@ public class BeerServiceImpl implements BeerService {
     @Override
     public Beer getBeerById(UUID id) {
         log.debug("Get beer by Id - in service. Id: {} ", id.toString());
-//        return beerMap.get(id);
-        //TODO 17.08.2026 ruben: implement correctly
-        return new ArrayList<>(beerMap.values()).getFirst();
+        return beerMap.get(id);
 
     }
 

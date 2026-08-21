@@ -23,7 +23,7 @@ public class BeerServiceImpl implements BeerService {
         this.beerMap = new HashMap<>();
 
         Beer beer1 = Beer.builder()
-                .id(UUID.randomUUID())
+                .id(UUID.fromString("bbcc4621-d88f-4a94-ae2f-b38072bf5087"))
                 .version(1)
                 .beerName("Galaxy Cat")
                 .beerStyle(BeerStyle.ALE)
@@ -101,5 +101,18 @@ public class BeerServiceImpl implements BeerService {
 
         beerMap.put(beer1.getId(), beer1);
         return beer1;
+    }
+
+    @Override
+    public void updateBeer(UUID uuid, Beer beer) {
+
+        Beer existingBeer = getBeerById(uuid);
+        existingBeer.setBeerName(beer.getBeerName());
+        existingBeer.setPrice(beer.getPrice());
+        existingBeer.setUpc(beer.getUpc());
+        existingBeer.setQuantityOnHand(beer.getQuantityOnHand());
+//        existingBeer.setBeerStyle(beer.getBeerStyle());
+
+        beerMap.put(existingBeer.getId(), existingBeer);
     }
 }

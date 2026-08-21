@@ -7,9 +7,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
+import ch.qos.logback.core.util.StringUtil;
 import guru.springframework.spring7restmvc.model.Customer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 /**
  * Created by ruben
@@ -53,15 +55,6 @@ public class CustomerServiceImpl implements CustomerService {
     // mock DB
     private void fetchCustomers() {
 
-        Customer customer2 = Customer.builder()
-                .id(2)
-                .customerName("Matt Secret")
-                .version(1L)
-                .createdDate(LocalDate.now())
-                .lastModifiedDate(LocalDate.now())
-                .build();
-        customers.put(customer2.getId(), customer2);
-
         Customer customer1 = Customer.builder()
                 .id(1)
                 .customerName("John Kelly")
@@ -71,6 +64,14 @@ public class CustomerServiceImpl implements CustomerService {
                 .build();
         customers.put(customer1.getId(), customer1);
 
+        Customer customer2 = Customer.builder()
+                .id(2)
+                .customerName("Matt Secret")
+                .version(1L)
+                .createdDate(LocalDate.now())
+                .lastModifiedDate(LocalDate.now())
+                .build();
+        customers.put(customer2.getId(), customer2);
 
         Customer customer3 = Customer.builder()
                 .id(3)
@@ -83,4 +84,39 @@ public class CustomerServiceImpl implements CustomerService {
 
 
     }
+
+    @Override
+    public Customer updateCustomer(Integer customerId, Customer customer) {
+
+        log.debug("updating customer with id {}", customerId);
+        Customer updatedCustomer = customers.get(customerId);
+        updatedCustomer.setCustomerName(customer.getCustomerName());
+        updatedCustomer.setVersion(updatedCustomer.getVersion() + 1);
+        updatedCustomer.setLastModifiedDate(LocalDate.now());
+
+        customers.replace(customerId, updatedCustomer);
+        return updatedCustomer;
+
+
+    }
+
+    @Override
+    public void deleteCustomer(Integer id) {
+        log.debug("deleting customer with id {}", id);
+        customers.remove(id);
+
+    }
+
+    @Override
+    public void patchCustomer(Integer customerId, Customer customer) {
+        log.debug("patching customer with id {}", customerId);
+        Customer existingCustomer = customers.get(customerId);
+
+        if ((existingCustomer != null)) {
+            if (StringUtils.hasText(customer.getCustomerName())) {
+                existingCustomer.setCustomerName(customer.getCustomerName());
+            }
+        }
+    }
+
 }

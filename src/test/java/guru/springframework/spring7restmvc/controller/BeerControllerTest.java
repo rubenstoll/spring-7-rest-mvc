@@ -16,17 +16,12 @@ class BeerControllerTest {
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(BeerControllerTest.class);
     @Autowired
     private BeerController controller;
-    private UUID uuid3;
+    // controller creates new beer service which creates three beers to use a test data - should be done in a database.
+    private UUID beerSvcImplBeer1HardCodedId;
 
     @BeforeEach
     void setUp() {
-
-        String inputStr = "bbcc4621-d88f-4a94-ae2f-b38072bf5087";
-
-//        UUID uuid = UUID.fromString(inputStr);
-//        UUID uuid2 = UUID.fromString(inputStr);
-        this.uuid3 = UUID.fromString(inputStr);
-
+        this.beerSvcImplBeer1HardCodedId = UUID.fromString("bbcc4621-d88f-4a94-ae2f-b38072bf5087");
 
     }
 
@@ -34,13 +29,9 @@ class BeerControllerTest {
     @Test
     void getBeerById() {
         log.debug("call controller");
-        // https://www.baeldung.com/java-generate-same-uuid-from-string#the-given-string-is-a-standard-uuid-representation
-// UUID uid = UUID.fromString("f000aa01-0451-4000-b000-000000000000");
-//        UUID random = UUID.randomUUID();
-        var x = controller.getBeerById(uuid3);
+        var x = controller.getBeerById(beerSvcImplBeer1HardCodedId);
         assertThat(x).isNotNull();
         log.debug("getBeerById() returned UUID {}", x.getId());
-        //TODO 17.08.2026 ruben: implement correctly
         assertThat(x.getId()).isEqualTo(x.getId());
     }
 }

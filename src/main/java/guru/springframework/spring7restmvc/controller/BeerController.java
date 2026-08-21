@@ -28,7 +28,7 @@ public class BeerController {
 
 //    @RequestMapping(method = RequestMethod.POST)
     @PostMapping
-    public ResponseEntity handlePost(@RequestBody Beer beer) {
+    public ResponseEntity<Beer> handlePost(@RequestBody Beer beer) {
 //    public ResponseEntity handlePost(Beer beer) {
         Beer savedBeer = beerService.saveNewBeer(beer);
 

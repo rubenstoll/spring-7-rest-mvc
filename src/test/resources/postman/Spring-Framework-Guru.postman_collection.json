@@ -136,6 +136,39 @@
         }
       },
       "response": []
+    },
+    {
+      "name": "saveCustomer",
+      "protocolProfileBehavior": {
+        "disabledSystemHeaders": {}
+      },
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "    {\n        \"beerName\": \"Modelo Negra R69\",\n        \"beerStyle\": \"IPA\",\n        \"price\": 11.00,\n        \"quantityOnHand\": 300,\n        \"upc\": \"12345677888\"\n    }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/v1/beer",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "beer"
+          ]
+        }
+      },
+      "response": []
     }
   ]
 }

@@ -47,8 +47,7 @@ public class CustomerController {
 
     @RequestMapping(method = RequestMethod.POST)
     @PostMapping
-    public ResponseEntity createCustomer(@RequestBody Customer customer) {
-
+    public ResponseEntity<Customer> createCustomer(@RequestBody Customer customer) {
         customerService.createCustomer(customer);
         log.debug("created new customer with ID {}", customer.getId());
         HttpHeaders headers = new HttpHeaders();

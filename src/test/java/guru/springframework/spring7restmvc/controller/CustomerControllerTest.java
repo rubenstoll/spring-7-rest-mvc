@@ -10,6 +10,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 
 @Slf4j
 @SpringBootTest
@@ -46,6 +48,20 @@ class CustomerControllerTest {
                     assertThat(c.getCustomerName()).isEqualTo("Matt Secret");
                     assertThat(customer.getVersion()).isEqualTo(1);
                 });
+
+    }
+
+    @Test
+    void createCustomer() {
+        Customer customer = Customer.builder()
+                .customerName("Matt Secret")
+                .build();
+
+        ResponseEntity responseEntity = customerController.createCustomer(customer);
+
+        assertThat(responseEntity).isNotNull();
+        assertThat(responseEntity.getHeaders().size()).isGreaterThan(0);
+        assertThat(responseEntity.getHeaders().containsHeader(HttpHeaders.LOCATION)).isTrue();
 
     }
 }

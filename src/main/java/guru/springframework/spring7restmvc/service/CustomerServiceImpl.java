@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 import guru.springframework.spring7restmvc.model.Customer;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +34,18 @@ public class CustomerServiceImpl implements CustomerService {
     public List<Customer> listCustomers() {
         log.debug("getting customer in service .. ");
         return new ArrayList<>(customers.values());
+
+    }
+
+    @Override
+    public void createCustomer(Customer customer) {
+
+        int customerId = ThreadLocalRandom.current().nextInt(0, 1000);
+        customer.setId(customerId);
+        customer.setVersion(1L);
+        customer.setCreatedDate(LocalDate.now());
+        customer.setLastModifiedDate(LocalDate.now());
+        customers.put(customer.getId(), customer);
 
     }
 

@@ -1,4 +1,4 @@
-package guru.springframework.spring7restmvc.service;
+package guru.springframework.spring7restmvc.services;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
-import ch.qos.logback.core.util.StringUtil;
 import guru.springframework.spring7restmvc.model.Customer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

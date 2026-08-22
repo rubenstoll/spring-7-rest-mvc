@@ -3,7 +3,7 @@ package guru.springframework.spring7restmvc.controller;
 import java.util.List;
 
 import guru.springframework.spring7restmvc.model.Customer;
-import guru.springframework.spring7restmvc.service.CustomerService;
+import guru.springframework.spring7restmvc.services.CustomerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;

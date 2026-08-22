@@ -1,37 +1,64 @@
 package guru.springframework.spring7restmvc.controller;
 
-import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.hamcrest.core.Is.is;
+import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.UUID;
-
-import org.junit.jupiter.api.BeforeEach;
+import guru.springframework.spring7restmvc.model.Beer;
+import guru.springframework.spring7restmvc.services.BeerService;
+import guru.springframework.spring7restmvc.services.BeerServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.web.servlet.MockMvc;
 
-@SpringBootTest
+@Slf4j
+@WebMvcTest(BeerController.class)
+//@SpringBootTest
 class BeerControllerTest {
 
-    private static final Logger log = org.slf4j.LoggerFactory.getLogger(BeerControllerTest.class);
-    @Autowired
-    private BeerController controller;
     // controller creates new beer service which creates three beers to use a test data - should be done in a database.
-    private UUID beerSvcImplBeer1HardCodedId;
+    //    @Autowired
+//    private BeerController controller;
 
-    @BeforeEach
-    void setUp() {
-        this.beerSvcImplBeer1HardCodedId = UUID.fromString("bbcc4621-d88f-4a94-ae2f-b38072bf5087");
+    @Autowired
+    MockMvc mockMvc;
 
-    }
+    @MockitoBean
+    BeerService beerService;
 
+    BeerServiceImpl beerServiceImpl = new BeerServiceImpl();
+    private static final String API_URL = "/api/v1/beer";
 
     @Test
-    void getBeerById() {
+    void getBeerById() throws Exception {
+        Beer testBeer = beerServiceImpl.listBeers().get(0);
+//        given(beerService.getBeerById(any(UUID.class))).willReturn(testBeer);
+        given(beerService.getBeerById(testBeer.getId())).willReturn(testBeer);
+
         log.debug("call controller");
-        var x = controller.getBeerById(beerSvcImplBeer1HardCodedId);
-        assertThat(x).isNotNull();
-        log.debug("getBeerById() returned UUID {}", x.getId());
-        assertThat(x.getId()).isEqualTo(x.getId());
+//        var x = controller.getBeerById(beerSvcImplBeer1HardCodedId);
+
+//        mockMvc.perform(get(API_URL + "/" + UUID.randomUUID())
+        mockMvc.perform(get("/api/v1/beer/" + testBeer.getId())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+//                .andExpect(content().contentType(MediaType.APPLICATION_ATOM_XML));
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id", is(testBeer.getId().toString())))
+                .andExpect(jsonPath("$.beerName", is(testBeer.getBeerName())));
+
+
+//        assertThat(x).isNotNull();
+//        log.debug("getBeerById() returned UUID {}", x.getId());
+//        assertThat(x.getId()).isEqualTo(x.getId());
+
     }
+
 }

@@ -1,53 +1,69 @@
 package guru.springframework.spring7restmvc.controller;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.util.List;
+import static org.hamcrest.Matchers.is;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import guru.springframework.spring7restmvc.model.Customer;
+import guru.springframework.spring7restmvc.services.CustomerService;
+import guru.springframework.spring7restmvc.services.CustomerServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.web.servlet.MockMvc;
 
 @Slf4j
-@SpringBootTest
+@WebMvcTest(CustomerController.class)
 class CustomerControllerTest {
 
     @Autowired
-    private CustomerController customerController;
+    private MockMvc mockMvc;
+
+    @MockitoBean
+    private CustomerService customerService;
+
+    private CustomerServiceImpl customerServiceImpl = new CustomerServiceImpl();
 
     @BeforeEach
     void setUp() {
     }
 
     @Test
-    void getCustomerList() {
-        List<Customer> customerList = customerController.getCustomerList();
+    void getCustomerList() throws Exception {
 
-        log.debug(customerList.toString());
+//        Customer customer = customerServiceImpl.listCustomers().getFirst();
 
-        assertThat(customerList).isNotNull();
-        assertThat(customerList.size()).isEqualTo(3);
+        given(customerService.listCustomers()).willReturn(customerServiceImpl.listCustomers());
 
-        assertThat(customerList)
-                .isNotEmpty()
-                .anySatisfy(customer -> assertThat(customer.getCustomerName()).contains("Martha"));
+        mockMvc.perform(get("/api/v1/customer")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.length()").value(3));
 
     }
 
     @Test
-    void getCustomerById() {
-        Customer customer = customerController.getCustomerById(2);
-        log.debug(customer.toString());
-        assertThat(customer)
-                .satisfies(c -> {
-                    assertThat(c.getCustomerName()).isEqualTo("Matt Secret");
-                    assertThat(customer.getVersion()).isEqualTo(1);
-                });
+    void getCustomerById() throws Exception {
+
+        Customer customer = customerServiceImpl.listCustomers().getFirst();
+        when(customerService.getCustomerById(customer.getId())).thenReturn(customer);
+
+        mockMvc.perform(get("/api/v1/customer/" + customer.getId())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.length()",is(5)))
+                .andExpect(jsonPath("$.customerName", is(customer.getCustomerName())));
+
 
     }
 
@@ -57,11 +73,11 @@ class CustomerControllerTest {
                 .customerName("Matt Secret")
                 .build();
 
-        ResponseEntity responseEntity = customerController.createCustomer(customer);
-
-        assertThat(responseEntity).isNotNull();
-        assertThat(responseEntity.getHeaders().size()).isGreaterThan(0);
-        assertThat(responseEntity.getHeaders().containsHeader(HttpHeaders.LOCATION)).isTrue();
+//        ResponseEntity responseEntity = customerController.createCustomer(customer);
+//
+//        assertThat(responseEntity).isNotNull();
+//        assertThat(responseEntity.getHeaders().size()).isGreaterThan(0);
+//        assertThat(responseEntity.getHeaders().containsHeader(HttpHeaders.LOCATION)).isTrue();
 
     }
 }

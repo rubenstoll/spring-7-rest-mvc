@@ -10,7 +10,7 @@ public interface CustomerService {
 
     List<Customer> listCustomers();
 
-    void createCustomer(Customer customer);
+    Customer createCustomer(Customer customer);
 
     Customer updateCustomer(Integer customerId, Customer customer);
 

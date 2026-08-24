@@ -39,7 +39,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void createCustomer(Customer customer) {
+    public Customer createCustomer(Customer customer) {
 
         int customerId = ThreadLocalRandom.current().nextInt(0, 1000);
         customer.setId(customerId);
@@ -48,6 +48,7 @@ public class CustomerServiceImpl implements CustomerService {
         customer.setLastModifiedDate(LocalDate.now());
         customers.put(customer.getId(), customer);
 
+        return customer;
     }
 
 

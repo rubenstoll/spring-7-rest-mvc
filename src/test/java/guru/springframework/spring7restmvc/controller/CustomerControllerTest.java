@@ -19,6 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import guru.springframework.spring7restmvc.model.Customer;
 import guru.springframework.spring7restmvc.services.CustomerService;
@@ -75,6 +76,36 @@ class CustomerControllerTest {
                 .andExpect(jsonPath("$.length()").value(3));
 
     }
+
+
+    @Test
+    void getCustomerByIdNotFound() throws Exception {
+        given(customerService.getCustomerById(anyInt())).willReturn(Optional.empty());
+
+        log.debug("CustomerController getCustomerByIdNotFound TEST");
+        mockMvc.perform(get(CustomerController.CUSTOMER_API + "/" + 988888))
+                .andExpect(status().isNotFound());
+
+
+    }
+
+    @Test
+    void getCustomerById() throws Exception {
+        Customer customer = customerServiceImpl.listCustomers().getFirst();
+        when(customerService.getCustomerById(customer.getId())).thenReturn(Optional.of(customer));
+
+        log.debug("Customer ID {}", customer.getId());
+
+        mockMvc.perform(get(CustomerController.CUSTOMER_API + "/" + customer.getId())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.length()", is(5)))
+                .andExpect(jsonPath("$.customerName", is(customer.getCustomerName())));
+
+
+    }
+
 
     @Test
     void convertObject2Json() {
@@ -165,22 +196,6 @@ class CustomerControllerTest {
 
         assertThat(integerArgumentCaptor.getValue()).isEqualTo(customer.getId());
         assertThat(captor.getValue().getCustomerName()).isEqualTo(customer.getCustomerName());
-
-    }
-
-    @Test
-    void getCustomerById() throws Exception {
-
-        Customer customer = customerServiceImpl.listCustomers().getFirst();
-        when(customerService.getCustomerById(customer.getId())).thenReturn(customer);
-
-        mockMvc.perform(get("/api/v1/customer/" + customer.getId())
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.length()", is(5)))
-                .andExpect(jsonPath("$.customerName", is(customer.getCustomerName())));
-
 
     }
 

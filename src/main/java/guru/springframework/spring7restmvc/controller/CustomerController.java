@@ -30,22 +30,24 @@ import org.springframework.web.bind.annotation.RestController;
  * every request handling method of the controller class with the @ResponseBody annotation.
  **/
 @RestController
-@RequestMapping("/api/v1/customer")
+//@RequestMapping("/api/v1/customer")
 @Slf4j
 @RequiredArgsConstructor
 public class CustomerController {
 
+    public final static String CUSTOMER_API = "/api/v1/customer";
+
     private final CustomerService customerService;
     private final static String CUSTOMER_API_URL = "/api/v1/customer";
 
-    @PatchMapping("/{customerId}")
+    @PatchMapping(CUSTOMER_API_URL + "/{customerId}")
     public ResponseEntity patchCustomer(@PathVariable("customerId") Integer customerId, @RequestBody Customer customer) {
         customerService.patchCustomer(customerId, customer);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
     }
 
-    @DeleteMapping("/{customerId}")
+    @DeleteMapping(CUSTOMER_API_URL + "/{customerId}")
 //    @RequestMapping(value = "/{customerId}", method = {RequestMethod.DELETE, RequestMethod.GET})
     public ResponseEntity<Customer> deleteCustomer(@PathVariable("customerId") Integer customerId) {
 
@@ -62,14 +64,14 @@ public class CustomerController {
     //**********************************************************************
     // https://www.baeldung.com/spring-requestparam-vs-pathvariable
     //**********************************************************************
-    @PutMapping("/path/{customerId}")
+    @PutMapping(CUSTOMER_API_URL + "/path/{customerId}")
     public ResponseEntity<Customer> updateCustomerPath(@PathVariable("customerId") Integer customerId, @RequestBody Customer customer) {
         HttpHeaders headers = updateCustomerGetHeaders(customerId, customer);
         return new ResponseEntity<>(headers, HttpStatus.NO_CONTENT);
 
     }
 
-    @PutMapping("/param")
+    @PutMapping(CUSTOMER_API_URL + "/param")
     public ResponseEntity<Customer> updateCustomerParam(@RequestParam("customerId") Integer customerId, @RequestBody Customer customer) {
         HttpHeaders headers = updateCustomerGetHeaders(customerId, customer);
         return new ResponseEntity<>(headers, HttpStatus.NO_CONTENT);
@@ -96,14 +98,24 @@ public class CustomerController {
     //    @RequestMapping("{customerId}")
 //    @RequestMapping(value = "{customerId}", method =  RequestMethod.GET)
 //    @RequestMapping(value = "{customerId}")
-    @GetMapping("/{customerId}")
+    @GetMapping(CUSTOMER_API_URL+"/{customerId}")
     public Customer getCustomerById(@PathVariable("customerId") Integer customerId) {
-        return customerService.getCustomerById(customerId);
+        log.debug("Retrieving customer with id {}", customerId);
+        return customerService.getCustomerById(customerId).orElseThrow(NotFoundException::new);
 
     }
 
+//    @ExceptionHandler(NotFoundException.class)
+//    public ResponseEntity handleNotFoundException() {
+//        log.error("!!!!! Customer not found");
+//        log.debug("Customer not found");
+//        return ResponseEntity.notFound().build();
+//
+//    }
+//
+
     //    @RequestMapping(method = RequestMethod.POST)
-    @PostMapping
+    @PostMapping(CUSTOMER_API_URL)
     public ResponseEntity<Customer> createCustomer(@RequestBody Customer customer) {
         customerService.createCustomer(customer);
         log.debug("created new customer with ID {}", customer.getId());

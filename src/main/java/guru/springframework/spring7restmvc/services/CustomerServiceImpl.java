@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
 import guru.springframework.spring7restmvc.model.Customer;
@@ -27,8 +28,8 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Customer getCustomerById(Integer id) {
-        return customers.get(id);
+    public Optional<Customer> getCustomerById(Integer id) {
+        return Optional.of(customers.get(id));
     }
 
     @Override

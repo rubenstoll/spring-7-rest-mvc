@@ -1,14 +1,19 @@
 package guru.springframework.spring7restmvc.services;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+
 import guru.springframework.spring7restmvc.model.Beer;
 import guru.springframework.spring7restmvc.model.BeerStyle;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.*;
 
 /**
  * Created by jt, Spring Framework Guru.
@@ -108,11 +113,11 @@ public class BeerServiceImpl implements BeerService {
     }
 
     @Override
-    public Beer getBeerById(UUID id) {
+    public Optional<Beer> getBeerById(UUID id) {
 
         log.debug("Get Beer by Id - in service. Id: " + id.toString());
 
-        return beerMap.get(id);
+        return Optional.of(beerMap.get(id));
     }
 
     @Override

@@ -1,12 +1,13 @@
 package guru.springframework.spring7restmvc.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import guru.springframework.spring7restmvc.model.Customer;
 
 public interface CustomerService {
 
-    Customer getCustomerById(Integer id);
+    Optional<Customer> getCustomerById(Integer id);
 
     List<Customer> listCustomers();
 

@@ -1,0 +1,55 @@
+{
+  "info": {
+    "_postman_id": "8ea1e211-3946-4530-8b0a-f94d4b641be4",
+    "name": "GGI_services",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "10142290"
+  },
+  "item": [
+    {
+      "name": "GGI_getAuftrag",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "type": "text",
+            "value": "application/soap+xml"
+          },
+          {
+            "key": "charset",
+            "type": "text",
+            "value": "utf-8"
+          },
+          {
+            "key": "action",
+            "type": "text",
+            "value": "\"http://cls.common.ws.allianz.ch/Cls/fetchEvnRequest\"",
+            "disabled": true
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "<?xml version='1.0' encoding='UTF-8'?>\r\n<S:Envelope xmlns:S=\"http://www.w3.org/2003/05/soap-envelope\">\r\n\t<S:Header>\r\n\t\t<User xmlns=\"http://allianz.ch/ws/user\" xmlns:S=\"http://www.w3.org/2003/05/soap-envelope\">audanet</User>\r\n\t</S:Header>\r\n\t<S:Body>\r\n\t\t<ns2:getAuftrag xmlns:ns2=\"http://auftrag.schaden.ws.allianz.ch/\" xmlns:ns3=\"http://allianz.ch/ws/faults\">\r\n\t\t\t<ns2:AuftragId>221316999676</ns2:AuftragId>\r\n\t\t\t<ns2:IncludeDocuments>true</ns2:IncludeDocuments>\r\n\t\t</ns2:getAuftrag>\r\n\t</S:Body>\r\n</S:Envelope>",
+          "options": {
+            "raw": {
+              "language": "xml"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{ggi_svc_url}}/schaden/auftrag",
+          "host": [
+            "{{ggi_svc_url}}"
+          ],
+          "path": [
+            "schaden",
+            "auftrag"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

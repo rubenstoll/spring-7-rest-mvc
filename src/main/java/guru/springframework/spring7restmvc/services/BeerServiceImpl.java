@@ -1,14 +1,19 @@
 package guru.springframework.spring7restmvc.services;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+
 import guru.springframework.spring7restmvc.model.BeerDTO;
 import guru.springframework.spring7restmvc.model.BeerStyle;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.*;
 
 /**
  * Created by jt, Spring Framework Guru.
@@ -18,6 +23,7 @@ import java.util.*;
 public class BeerServiceImpl implements BeerService {
 
     private Map<UUID, BeerDTO> beerMap;
+
 
     public BeerServiceImpl() {
         this.beerMap = new HashMap<>();
@@ -67,7 +73,7 @@ public class BeerServiceImpl implements BeerService {
     public void patchBeerById(UUID beerId, BeerDTO beer) {
         BeerDTO existing = beerMap.get(beerId);
 
-        if (StringUtils.hasText(beer.getBeerName())){
+        if (StringUtils.hasText(beer.getBeerName())) {
             existing.setBeerName(beer.getBeerName());
         }
 
@@ -79,7 +85,7 @@ public class BeerServiceImpl implements BeerService {
             existing.setPrice(beer.getPrice());
         }
 
-        if (beer.getQuantityOnHand() != null){
+        if (beer.getQuantityOnHand() != null) {
             existing.setQuantityOnHand(beer.getQuantityOnHand());
         }
 
@@ -89,21 +95,25 @@ public class BeerServiceImpl implements BeerService {
     }
 
     @Override
-    public void deleteById(UUID beerId) {
-        beerMap.remove(beerId);
+    public Boolean deleteById(UUID beerId) {
+        if (beerMap.remove(beerId) == null) {
+            return false;
+        }
+        return true;
     }
 
     @Override
-    public void updateBeerById(UUID beerId, BeerDTO beer) {
+    public Optional<BeerDTO> updateBeerById(UUID beerId, BeerDTO beer) {
         BeerDTO existing = beerMap.get(beerId);
         existing.setBeerName(beer.getBeerName());
         existing.setPrice(beer.getPrice());
         existing.setUpc(beer.getUpc());
         existing.setQuantityOnHand(beer.getQuantityOnHand());
+        return Optional.of(existing);
     }
 
     @Override
-    public List<BeerDTO> listBeers(){
+    public List<BeerDTO> listBeers() {
         return new ArrayList<>(beerMap.values());
     }
 

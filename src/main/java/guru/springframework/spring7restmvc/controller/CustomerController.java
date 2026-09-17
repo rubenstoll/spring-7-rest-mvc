@@ -35,7 +35,9 @@ public class CustomerController {
     @DeleteMapping(CUSTOMER_PATH_ID)
     public ResponseEntity deleteCustomerById(@PathVariable("customerId") UUID customerId){
 
-        customerService.deleteCustomerById(customerId);
+        if (!customerService.deleteCustomerById(customerId)) {
+            throw new NotFoundException("Customer with id " + customerId + " not found");
+        }
 
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }

@@ -1,18 +1,20 @@
 package guru.springframework.spring7restmvc.services;
 
-import guru.springframework.spring7restmvc.mappers.BeerMapper;
-import guru.springframework.spring7restmvc.model.BeerDTO;
-import guru.springframework.spring7restmvc.repositories.BeerRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Primary;
-import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
+
+import guru.springframework.spring7restmvc.entities.Beer;
+import guru.springframework.spring7restmvc.mappers.BeerMapper;
+import guru.springframework.spring7restmvc.model.BeerDTO;
+import guru.springframework.spring7restmvc.model.BeerStyle;
+import guru.springframework.spring7restmvc.repositories.BeerRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 /**
  * Created by jt, Spring Framework Guru.
@@ -25,12 +27,23 @@ public class BeerServiceJPA implements BeerService {
     private final BeerMapper beerMapper;
 
     @Override
-    public List<BeerDTO> listBeers() {
-        return beerRepository.findAll()
-                .stream()
+    public List<BeerDTO> listBeers(String beerName, BeerStyle beerStyle) {
+
+        List<Beer> beerList;
+        if (StringUtils.hasText(beerName) && beerStyle == null) {
+            beerList = beerRepository.findAllByBeerNameIsLikeIgnoreCase("%" + beerName + "%");
+        } else if (!StringUtils.hasText(beerName) && beerStyle != null) {
+            beerList = beerRepository.findAllByBeerStyle(beerStyle);
+        } else {
+            beerList = beerRepository.findAll();
+        }
+
+        return beerList.stream()
                 .map(beerMapper::beerToBeerDto)
                 .collect(Collectors.toList());
+
     }
+
 
     @Override
     public Optional<BeerDTO> getBeerById(UUID id) {
@@ -76,19 +89,19 @@ public class BeerServiceJPA implements BeerService {
         AtomicReference<Optional<BeerDTO>> atomicReference = new AtomicReference<>();
 
         beerRepository.findById(beerId).ifPresentOrElse(foundBeer -> {
-            if (StringUtils.hasText(beer.getBeerName())){
+            if (StringUtils.hasText(beer.getBeerName())) {
                 foundBeer.setBeerName(beer.getBeerName());
             }
-            if (beer.getBeerStyle() != null){
+            if (beer.getBeerStyle() != null) {
                 foundBeer.setBeerStyle(beer.getBeerStyle());
             }
-            if (StringUtils.hasText(beer.getUpc())){
+            if (StringUtils.hasText(beer.getUpc())) {
                 foundBeer.setUpc(beer.getUpc());
             }
-            if (beer.getPrice() != null){
+            if (beer.getPrice() != null) {
                 foundBeer.setPrice(beer.getPrice());
             }
-            if (beer.getQuantityOnHand() != null){
+            if (beer.getQuantityOnHand() != null) {
                 foundBeer.setQuantityOnHand(beer.getQuantityOnHand());
             }
             atomicReference.set(Optional.of(beerMapper

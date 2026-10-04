@@ -1,6 +1,7 @@
 package guru.springframework.spring7restmvc.services;
 
 import guru.springframework.spring7restmvc.model.BeerDTO;
+import guru.springframework.spring7restmvc.model.BeerStyle;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,7 +12,7 @@ import java.util.UUID;
  */
 public interface BeerService {
 
-    List<BeerDTO> listBeers();
+    List<BeerDTO> listBeers(String beername, BeerStyle beerStyle);
 
     Optional<BeerDTO> getBeerById(UUID id);
 
@@ -22,4 +23,6 @@ public interface BeerService {
     Boolean deleteById(UUID beerId);
 
     Optional<BeerDTO> patchBeerById(UUID beerId, BeerDTO beer);
+
+
 }

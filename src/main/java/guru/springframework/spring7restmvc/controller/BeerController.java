@@ -1,6 +1,10 @@
 package guru.springframework.spring7restmvc.controller;
 
+import java.util.List;
+import java.util.UUID;
+
 import guru.springframework.spring7restmvc.model.BeerDTO;
+import guru.springframework.spring7restmvc.model.BeerStyle;
 import guru.springframework.spring7restmvc.services.BeerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,10 +12,15 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.UUID;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Created by jt, Spring Framework Guru.
@@ -27,7 +36,7 @@ public class BeerController {
     private final BeerService beerService;
 
     @PatchMapping(BEER_PATH_ID)
-    public ResponseEntity updateBeerPatchById(@PathVariable("beerId")UUID beerId, @RequestBody BeerDTO beer){
+    public ResponseEntity updateBeerPatchById(@PathVariable("beerId") UUID beerId, @RequestBody BeerDTO beer) {
 
         beerService.patchBeerById(beerId, beer);
 
@@ -35,9 +44,9 @@ public class BeerController {
     }
 
     @DeleteMapping(BEER_PATH_ID)
-    public ResponseEntity deleteById(@PathVariable("beerId") UUID beerId){
+    public ResponseEntity deleteById(@PathVariable("beerId") UUID beerId) {
 
-        if(! beerService.deleteById(beerId)){
+        if (!beerService.deleteById(beerId)) {
             throw new NotFoundException();
         }
 
@@ -45,9 +54,9 @@ public class BeerController {
     }
 
     @PutMapping(BEER_PATH_ID)
-    public ResponseEntity updateById(@PathVariable("beerId")UUID beerId, @Validated @RequestBody BeerDTO beer){
+    public ResponseEntity updateById(@PathVariable("beerId") UUID beerId, @Validated @RequestBody BeerDTO beer) {
 
-        if( beerService.updateBeerById(beerId, beer).isEmpty()){
+        if (beerService.updateBeerById(beerId, beer).isEmpty()) {
             throw new NotFoundException();
         }
 
@@ -55,7 +64,7 @@ public class BeerController {
     }
 
     @PostMapping(BEER_PATH)
-    public ResponseEntity handlePost(@Validated @RequestBody BeerDTO beer){
+    public ResponseEntity handlePost(@Validated @RequestBody BeerDTO beer) {
 
         BeerDTO savedBeer = beerService.saveNewBeer(beer);
 
@@ -66,13 +75,17 @@ public class BeerController {
     }
 
     @GetMapping(value = BEER_PATH)
-    public List<BeerDTO> listBeers(){
-        return beerService.listBeers();
+    public List<BeerDTO> listBeers(@RequestParam(name = "beerName", required = false) String beerName,
+                                   @RequestParam(name = "beerStyle", required = false) BeerStyle beerStyle) {
+//        if (beerName == null || beerName.isBlank() || beerStyle == null || beerStyle.isBlank()) {
+//            return beerService.listBeers();
+//        }
+        return beerService.listBeers(beerName, beerStyle);
     }
 
 
     @GetMapping(value = BEER_PATH_ID)
-    public BeerDTO getBeerById(@PathVariable("beerId") UUID beerId){
+    public BeerDTO getBeerById(@PathVariable("beerId") UUID beerId) {
 
         log.debug("Get Beer by Id - in controller");
 
